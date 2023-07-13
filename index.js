@@ -17,7 +17,7 @@ app.get("/",(req,res)=>{
 
 
 app.use("/",routeUser);
-app.use(authMiddleWare)
+//app.use(authMiddleWare)
 app.use("/Dashboard",employeeRouter);
 
 

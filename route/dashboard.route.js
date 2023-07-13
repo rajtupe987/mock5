@@ -9,12 +9,9 @@ const employeeRouter = express.Router()
 //http://localhost:7600/Dashboard/employees?page=1
 employeeRouter.get('/employees', async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 5;
 
-        const skip = (page - 1) * limit;
 
-        const employees = await emp_model.find().skip(skip).limit(limit);
+        const employees = await emp_model.find()
 
         res.status(200).json(employees);
     } catch (error) {
@@ -28,8 +25,6 @@ employeeRouter.get('/employees', async (req, res) => {
 employeeRouter.post('/employees', async (req, res) => {
     try {
         const { firstName, lastName, email, department, salary } = req.body;
-
-
         const newEmployee = new emp_model({
             firstName,
             lastName,
@@ -37,16 +32,17 @@ employeeRouter.post('/employees', async (req, res) => {
             department,
             salary,
         });
-
-
         await newEmployee.save();
 
-        res.status(200).json({ message: "Employee added successfully " });
+        if (newEmployee) {
+            res.status(200).json({ ok: true, message: 'Employee added successfully' });
+          } else {
+            res.status(500).json({ ok: false, message: 'Failed to add employee' });
+          }
     } catch (error) {
-        res.status(500).json({ error: "Failed to add employee" });
+        res.status(500).json({ ok: false, message: 'Failed to add employee', error: error.message });
     }
 });
-
 
 // Update Employee - PUT route
 
